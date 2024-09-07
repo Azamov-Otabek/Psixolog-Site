@@ -40,7 +40,7 @@ jobs:
             # Pull latest code from GitHub
             log_info "---------------- PULLING CODE FROM GITHUB ----------------"
             cd poll-frontend
-            cd psixolog-admin
+            cd frontend-admin
             git stash
             git pull origin main
             log_success "---------------- CODE PULLED FROM GITHUB -----------------"
