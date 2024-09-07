@@ -3,7 +3,7 @@ import { DeleteOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Layout, Menu, theme, Popover, Button } from 'antd';
 import { Outlet, useNavigate } from 'react-router-dom';
 import './style.css';
-import { Quession } from '@ui';
+import { Quession, EditModal } from '@ui';
 import http from '../config';
 import { MenuIds } from '@store';
 import { toast } from 'react-toastify';
@@ -20,6 +20,8 @@ const App: React.FC = () => {
   const [selectedMenuKey, setSelectedMenuKey] = useState<string | null>(null);
   const { changeMenu_id }: any = MenuIds();
   const [file, setFile] = useState('')
+
+  
 
   const {
     token: { colorBgContainer },
@@ -104,10 +106,11 @@ const App: React.FC = () => {
           title="Rostdan ham o'chirmoqchimisiz ?"
           trigger="click"
           open={visiblePopover === item.id} // Changed from item.title to item.id
-          onOpenChange={(open) => setVisiblePopover(open ? item.id : null)} // Changed from item.title to item.id
+          onOpenChange={(open) => setVisiblePopover(open ? item.id : null)}
         >
           <DeleteOutlined className="delete-icon" />
         </Popover>
+        <EditModal data={item} getData={getMenuData}/>
       </div>
     ),
   }));
@@ -171,3 +174,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

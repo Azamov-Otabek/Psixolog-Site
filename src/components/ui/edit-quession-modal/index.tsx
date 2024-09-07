@@ -1,14 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Modal, Form, Input, Space } from 'antd';
 import { ProFormText } from '@ant-design/pro-components';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import './style.scss'
+import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import http from '../../../config';
 import { toast } from 'react-toastify';
 
 function Index(props: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [initialValues, setInitialValues] = useState<any>({ options: [{ variant: '', ball: '' }], feedback: [] });
+
+  useEffect(() => {
+    if (props.data) {
+      const formattedValues = {
+        title: props.data.title || '',
+        subtitle: props.data.subtitle || '',
+        options: props.data.options || [{ variant: '', ball: '' }],
+        feedback: props.data.feedback || []
+      };
+
+      setInitialValues(formattedValues);
+    }
+  }, [props.data]);
 
   const showModal = () => {
     form.resetFields();
@@ -39,15 +52,14 @@ function Index(props: any) {
 
     delete formattedValues.feedback;
 
-    try {
-      const response = await http.post('/poll/', formattedValues);
-      if (response?.status === 201) {
-        toast.success("To'plam muvaffaqiyatli qo'shildi", { autoClose: 1200 });
-      }
-    } catch (err) {
-      toast.error("To'plam qo'shishda qandaydir muommo paydo bo'ldi", { autoClose: 1200 });
-      console.error(err);
+    try{
+        await http.put(`/poll/${props.data.id}`, formattedValues)
+        toast.success("To'plam tahrirlandi!", { autoClose: 1200 });
+    }catch(err) {
+        console.log(err);
+        toast.error("To'plam tahrirlashda qandaydir muommo paydo bo'ldi", { autoClose: 1200 });
     }
+
     props?.getData();
     setIsModalOpen(false);
     form.resetFields();
@@ -59,20 +71,14 @@ function Index(props: any) {
 
   return (
     <>
-      <Button className={props?.collapsed ? '' : 'modal-hidden'} type='primary' style={{ width: '90%', position: 'absolute', bottom: 0, left: 10 }} onClick={showModal}>
-        To'plam yaratish
-      </Button>
-      <Modal title={"So'rovnoma to'plam yaratish"} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+        <EditOutlined onClick={() => showModal()} style={{position: 'absolute', right: 0, fontSize: 18}}/>
+      <Modal title={"So'rovnoma to'plam taxrirlash"} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
         <Form
           form={form}
           onFinish={onFinish}
-          initialValues={{
-            options: [{ variant: '', ball: '' }]
-          }}
+          initialValues={initialValues}
         >
           <ProFormText
-            initialValue={''}
-            hasFeedback
             name="title"
             placeholder="Iltimos so'rovnoma to'plami nomini kiriting"
             rules={[
@@ -102,26 +108,26 @@ function Index(props: any) {
                     <span style={{ position: 'absolute', top: 5, left: 0, fontWeight: 700 }}>
                       {getAlphabetLabel(index)}
                     </span>
-                   <div style={{display: 'flex-box', alignItems: 'center', width: '100%', position: 'relative'}}>
-                    <Form.Item
+                    <div style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative' }}>
+                      <Form.Item
                         {...restField}
                         name={[name, 'variant']}
                         rules={[{ required: true, message: 'Variant kiriting!' }]}
-                        style={{ flex: 1, width: '70%', paddingLeft: 20 }}  
+                        style={{ flex: 1, width: '70%', paddingLeft: 20 }}
                       >
-                        <Input style={{width: '100%'}} placeholder="Variant kiriting (masalan: har doim, odatda)" />
+                        <Input style={{ width: '100%' }} placeholder="Variant kiriting (masalan: har doim, odatda)" />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, 'ball']}
                         rules={[{ required: true, message: 'Ball kiriting!' }]}
-                        style={{ flex: 1, width: '28%', position: 'absolute', right: 0, top: 0 }}  
+                        style={{ flex: 1, width: '28%', position: 'absolute', right: 0, top: 0 }}
                       >
-                        <Input style={{width: '100%'}} placeholder="Ball kiritng" />
+                        <Input style={{ width: '100%' }} placeholder="Ball kiriting" />
                       </Form.Item>
                     </div>
                     {fields.length > 1 && (
-                      <MinusCircleOutlined style={{position: 'absolute', top: 10, right: 10}} onClick={() => remove(name)} />
+                      <MinusCircleOutlined style={{ position: 'absolute', top: 10, right: 10 }} onClick={() => remove(name)} />
                     )}
                   </Space>
                 ))}
@@ -137,7 +143,7 @@ function Index(props: any) {
           <Form.List name="feedback">
             {(fields, { add, remove }) => (
               <>
-                {fields.map(({ key, name, ...restField }, _:any) => (
+                {fields.map(({ key, name, ...restField }, _: any) => (
                   <Space key={key} style={{ display: 'block', marginBottom: 8, width: '100%', position: 'relative' }} align="baseline">
                     <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                       <Form.Item
@@ -158,13 +164,13 @@ function Index(props: any) {
                       </Form.Item>
                     </div>
                     <Form.Item
-                        {...restField}
-                        name={[name, 'text']}
-                        rules={[{ required: true, message: 'Text kiritish zarur!' }]}
-                        style={{ width: '100%' }}
-                      >
-                        <Input.TextArea rows={2} style={{ width: '100%' }} placeholder="Text" />
-                      </Form.Item>
+                      {...restField}
+                      name={[name, 'text']}
+                      rules={[{ required: true, message: 'Text kiritish zarur!' }]}
+                      style={{ width: '100%' }}
+                    >
+                      <Input.TextArea rows={2} style={{ width: '100%' }} placeholder="Text" />
+                    </Form.Item>
                     {fields.length > 1 && (
                       <MinusCircleOutlined style={{ position: 'absolute', top: 10, right: 10 }} onClick={() => remove(name)} />
                     )}
