@@ -30,12 +30,14 @@ function Index(props: any) {
         ...option,
         ball: Number(option.ball),
       })),
-      feedback: values.feedback.map((item: any) => ({
+      feedbacks: values.feedback.map((item: any) => ({
         ...item,
         from: Number(item.from),
         to: Number(item.to),
       })),
     };
+
+    delete formattedValues.feedback;
 
     try {
       const response = await http.post('/poll/', formattedValues);
