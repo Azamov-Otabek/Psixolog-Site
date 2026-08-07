@@ -1,30 +1,65 @@
-# React + TypeScript + Vite
+# Psychology Survey — Admin Panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Административная часть системы психологического опроса. Интерфейс позволяет авторизованному пользователю управлять вопросами, вариантами ответов и обратной связью через REST API.
 
-Currently, two official plugins are available:
+## Возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- авторизация администратора;
+- проверка access token перед переходом в рабочую область;
+- просмотр списка вопросов;
+- добавление, редактирование и удаление вопросов;
+- динамические поля вариантов ответа и обратной связи;
+- уведомления о результате операций;
+- адаптивная боковая навигация;
+- Axios interceptor для передачи токена;
+- Docker-конфигурация и workflow для деплоя.
 
-## Expanding the ESLint configuration
+## Технологии
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- React 18
+- TypeScript
+- React Router
+- Ant Design / Ant Design Pro Components
+- Zustand
+- Axios
+- SCSS
+- Vite
+- Docker
 
-- Configure the top-level `parserOptions` property like this:
+## Запуск локально
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+git clone https://github.com/Azamov-Otabek/Psixolog-Site.git
+cd Psixolog-Site
+npm install
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Приложение использует API `https://api.nordik-tadqiqot.uz`. Для работы закрытых разделов необходимы действующие данные авторизации.
+
+## Production-сборка
+
+```bash
+npm run build
+npm run preview
+```
+
+## Скриншоты
+
+Скриншоты пока не добавлены. Рекомендуемый набор для `docs/screenshots/`:
+
+1. экран входа;
+2. таблица вопросов;
+3. форма создания вопроса;
+4. форма редактирования вопроса;
+5. мобильная версия панели.
+
+## Связанный проект
+
+Пользовательская часть системы: [psixolog-user](https://github.com/Azamov-Otabek/psixolog-user).
+
+## Статус и ограничения
+
+- публичный live demo в репозитории не указан;
+- для проверки полного сценария нужен доступ к API;
+- автоматические тесты в текущей версии не настроены.
